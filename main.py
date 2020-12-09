@@ -2,8 +2,6 @@ import sys
 import time
 import random
 import string
-import matplotlib.pyplot as plt
-import os
 from Bio import Entrez, AlignIO, SeqIO, Phylo
 from Bio.Align.Applications import ClustalwCommandline, MuscleCommandline
 from Bio.Phylo.TreeConstruction import DistanceCalculator, DistanceTreeConstructor
@@ -11,6 +9,8 @@ from Bio.Phylo import PhyloXML
 from Bio.Phylo.Applications import PhymlCommandline
 import matplotlib
 matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import os
 
 
 def get_random_string(length):
@@ -36,7 +36,7 @@ def get_fasta(id_list):
             f.close()
 
     # combine files in multifasta file
-    with open(saveDir+ dirName + 'multifasta.fasta', 'w') as outfile:
+    with open(saveDir + dirName + 'multifasta.fasta', 'w') as outfile:
         for fname in filename_list:
             with open(fname) as infile:
                 outfile.write(infile.read())
@@ -45,26 +45,19 @@ def get_fasta(id_list):
 
 def clustal_alignment(infile, outfile):
     # create an alignment file with clustal omega
-    if (user_OS == 'darwin'):
-        clustal_exe = "static/tools/MacOS/clustal-omega-1.2.3-macosx"
-    if (user_OS == 'linux'):
-        clustal_exe = "static/tools/Linux/clustalo-1.2.4-Ubuntu-x86_64"
-    if (user_OS == 'win64'):
-        clustal_exe = current_path + "static/tools/Windows/clustal-omega-1.2.2-win64/clustalo.exe"
+    
+    clustal_exe = "C:/wamp64/www/Phylogenie/static/tools/Windows/clustal-omega-1.2.2-win64/clustalo.exe"
 
     cline = ClustalwCommandline(clustal_exe, infile= saveDir + dirName + infile,
                                 outfile= saveDir + dirName + outfile)
     stdout, stderr = cline()
 
 
+
 def muscle_alignment(infile, outfile):
     #create an alignment file with muscke
-    if(user_OS == 'darwin'):
-        muscle_exe = "static/tools/MacOS/muscle3.8.31_i86darwin64"
-    if(user_OS == 'linux'):
-        muscle_exe = "static/tools/Linux/muscle3.8.31_i86linux64"
-    if(user_OS == 'win64'):
-        muscle_exe = current_path + "static/tools/Windows/muscle3.8.31_i86win32.exe"
+
+    muscle_exe = "C:/wamp64/www/Phylogenie/static/tools/Windows/muscle3.8.31_i86win32.exe"
 
     in_file = saveDir + dirName + infile
     out_file = saveDir + dirName + outfile
@@ -100,34 +93,20 @@ def ML_tree(infile, outfile, file_type):
     count = SeqIO.write(records, saveDir + dirName + outfile + ".phylip", "phylip")
     print("Converted %i records" % count)
 
-    if (user_OS == 'darwin'):
-        cmd = PhymlCommandline(cmd='static/tools/MacOS/PhyML-3.1/PhyML-3.1_macOS-MountainLion',
-                               input='static/data/sauvegardes/' + dirName + outfile + '.phylip')
-    if (user_OS == 'linux'):
-        cmd = PhymlCommandline(cmd='static/tools/Linux/PhyML-3.1/PhyML-3.1_linux64',
-                               input='static/data/sauvegardes/' + dirName + outfile + '.phylip')
-    if (user_OS == 'win64'):
-        cmd = PhymlCommandline(cmd= current_path + 'static/tools/Windows/PhyML-3.1/PhyML-3.1_win32.exe',
+    cmd = PhymlCommandline("C:/wamp64/www/Phylogenie/static/tools/Windows/PhyML-3.1/PhyML-3.1_win32.exe",
                                input= saveDir + dirName + outfile + '.phylip')
 
     out_log, err_log = cmd()
     tree = Phylo.read(saveDir + dirName + outfile + '.phylip_phyml_tree.txt', 'newick')
     Phylo.draw(tree, do_show=False)
     Phylo.write(tree, saveDir + dirName + 'tree.txt', "newick")
-    foo = current_path + saveDir + dirName + 'tree.png'
+    foo = saveDir + dirName + 'tree.png'
     plt.savefig(foo)
-
 
 
 ##################################### MAIN ##############################################################
 #Contact address
-Entrez.email = "sentinelles.bioinfo@gmail.com"
-
-# Define user's operating system
-user_OS = 'win64'
-
-current_path = os.path.dirname(__file__)
-parent_path = os.path.dirname(current_path)
+Entrez.email = "climat.web@gmail.com"
 
 # list of genes
 id_list = ["AY158636.1","AY158639.1","AY159811.1","AY159808.1","AY159809.1","AY158637.1","AY159810.1"]
