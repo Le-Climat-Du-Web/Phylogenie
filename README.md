@@ -62,7 +62,7 @@ Ajoutez un nouvel virtual host (1)
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Configuration utilisée
 
-* Windows 10 64-bits 20H2 -> préférez une version 32-bits pour faire fonctionner PhyML et donc obtenir l'arbre final
+* Windows 10 64-bits 20H2
 * Python 3.7
 * numpy 1.19.3
 * mod_wsgi 4.7.1
