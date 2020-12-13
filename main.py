@@ -16,6 +16,7 @@ from Bio.Phylo import PhyloXML
 from Bio.Phylo.Applications import PhymlCommandline
 
 ######################################################################################
+######################################################################################
 
 def get_random_string(length):
     """Générer une chaîne aléatoire de longueur fixe"""
