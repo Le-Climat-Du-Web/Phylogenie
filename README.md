@@ -41,6 +41,8 @@ from app import app as application
 
 ```
 
+2. Sauvegardez et quittez
+
 ## Configuration du virtual host de Wampserver
 
 1. Créez le virtual host depuis la page d'accueil de Wamp (localhost)
