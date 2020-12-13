@@ -13,14 +13,33 @@ Dans un terminal, tapez les commandes suivantes:
 2. mod_wsgi-express install-module
 3. Allez dans votre dossier wamp64\bin\apache\apache2.4.46\conf\httpd.conf
 4. Copiez les 3 lignes obtenues en point 2 à la suite des "LoadModule" (l'endroit n'a pas d'importance)
-5. Ajoutez la ligne WSGIApplicationGroup %{GLOBAL}
 
-![Zozor](https://zupimages.net/up/20/50/jeib.png)
+Vous devriez avoir ce genre de lignes
 
-6. Sauvegardez et fermez le fichier
+```
+# WSGI module
+LoadFile "C:/Python37/python37.dll"
+LoadModule wsgi_module "C:/Python37/lib/site-packages/mod_wsgi/server/mod_wsgi.cp37-win_amd64.pyd"
+WSGIPythonHome "C:/Python37"
+WSGIApplicationGroup %{GLOBAL}
+````
+
+5. Sauvegardez et fermez le fichier
 
 ## Ajout du script .wsgi
 Le plus pratique est de mettre ce script dans un dossier dédié. Ici, nous l'appelons, wsgi_scripts.
+
+1. Créez un fichier phylogenie.wsgi et ajoutez ces lignes de code
+
+```
+import sys 
+
+#Expand Python classes path with your app's path
+sys.path.insert(0, 'C:/wamp64/www/Phylogenie') 
+
+from app import app as application
+
+```
 
 ## Configuration du virtual host de Wampserver
 
@@ -40,7 +59,21 @@ Ajoutez un nouvel virtual host (1)
 2. Allez dans le fichier wamp64\bin\apache\apache2.4.46\conf\extra\httpd-vhosts.conf
 3. Modifiez le code de votre virtual host comme ceci (les chemins sont à modifier en fonction de votre configuration) :
 
-![Zozor](https://zupimages.net/up/20/50/4yf2.png)
+```
+#
+<VirtualHost *:80>
+  ServerName phylogenie
+  ServerAlias PY
+  DocumentRoot "c:/wamp64/www/phylogenie"
+  WSGIScriptAlias / "c:/wamp64/www/phylogenie/wsgi_scripts/phylogenie.wsgi"
+  <Directory "c:/wamp64/www/phylogenie/">
+    Options +Indexes +Includes +FollowSymLinks +MultiViews
+    AllowOverride All
+    Require local
+  </Directory>
+</VirtualHost>
+
+```
 
 4. Sauvegardez et fermez le fichier
 
