@@ -1,17 +1,21 @@
+#####################################################################################
+#                           Import & Librairies                                     #
+#####################################################################################
 import sys
 import time
 import random
 import string
+import os
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 from Bio import Entrez, AlignIO, SeqIO, Phylo
 from Bio.Align.Applications import ClustalwCommandline, MuscleCommandline
 from Bio.Phylo.TreeConstruction import DistanceCalculator, DistanceTreeConstructor
 from Bio.Phylo import PhyloXML
 from Bio.Phylo.Applications import PhymlCommandline
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import os
 
+######################################################################################
 
 def get_random_string(length):
     """Générer une chaîne aléatoire de longueur fixe"""
@@ -20,13 +24,15 @@ def get_random_string(length):
 
 
 def get_fasta(id_list):
-    # Create a random name for each user session and create corresponding directories in order to allow multiple simultaneous uses without loss of data
+    # Create a random name for each user session and create corresponding
+    # directories in order to allow multiple simultaneous uses without loss of data
     dirName = get_random_string(10) + "/" 
     os.makedirs(saveDir + dirName, exist_ok=True)
     # write a fasta file for each gene
     filename_list = []
     for gene_id in id_list:
-        records = Entrez.efetch(db="nucleotide", id=gene_id, rettype="fasta", retmode="text")
+        records = Entrez.efetch(db="nucleotide", id=gene_id, rettype="fasta",
+                                retmode="text")
         filename = (gene_id + '.fasta').format(records)
         filename_list.append(saveDir + dirName + filename)
         print('Writing:{}'.format(filename))
@@ -43,7 +49,6 @@ def get_fasta(id_list):
     return dirName
 
 
-
 def clustal_alignment(infile, outfile):
     # create an alignment file with clustal omega
     
@@ -52,7 +57,6 @@ def clustal_alignment(infile, outfile):
     cline = ClustalwCommandline(clustal_exe, infile= saveDir + dirName + infile,
                                 outfile= saveDir + dirName + outfile)
     stdout, stderr = cline()
-
 
 
 def muscle_alignment(infile, outfile):
@@ -69,9 +73,11 @@ def muscle_alignment(infile, outfile):
 def NJ_tree(infile, file_type):
     #Tree creation with neighbor-joining
     filename = saveDir + dirName + infile
-    aln = AlignIO.read(filename, file_type) #clustal si alignement clustal, fasta si alignement fasta
+    #clustal si alignement clustal, fasta si alignement fasta
+    aln = AlignIO.read(filename, file_type) 
     calculator = DistanceCalculator('identity')
-    constructor = DistanceTreeConstructor(calculator, 'nj') # nj ou UPGMA
+    # nj ou UPGMA
+    constructor = DistanceTreeConstructor(calculator, 'nj') 
     tree = constructor.build_tree(aln)
     # print(tree)
     #display a tree on terminal
@@ -85,7 +91,9 @@ def NJ_tree(infile, file_type):
 
 def ML_tree(infile, outfile, file_type):
     # Tree creation with maximum-likelihood algorithm (phyML)
-    # input : infile = .fasta alignment file that the user can import or paste, outfile = name of output file, file_type = clustal is the clustal too has been used, fasta if muscle tool has been used
+    # input : infile = .fasta alignment file that the user can import or paste,
+    # outfile = name of output file, file_type = clustal is the clustal too has been used,
+    # fasta if muscle tool has been used
     # output : .newick file and .png picture to display
     # phylogeny page should allow to choose maximum likelihood method
 
@@ -105,18 +113,26 @@ def ML_tree(infile, outfile, file_type):
     plt.savefig(foo)
 
 
-
-##################################### MAIN ##############################################################
+##################################################################################################
+################################# PROGRAMME PRINCIPAL ############################################
+##################################################################################################
 #Contact address
 Entrez.email = "climat.web@gmail.com"
 
-
 # list of genes
-id_list = ["AY158636.1","AY158639.1","AY159811.1","AY159808.1","AY159809.1","AY158637.1","AY159810.1"]
-name_gene = ["Vipera berus Pla2Vb", "Vipera berus AmtI2", "Vipera berus AmtI1", "Vipera aspis AmtI1", "Vipera aspis AmtI1", "Vipera aspis (AmtI2)", "Vipera aspis zinnikeri AmtI1"]
+id_list = ["AY158636.1","AY158639.1","AY159811.1","AY159808.1","AY159809.1","AY158637.1",
+           "AY159810.1"]
+name_gene = ["Vipera berus Pla2Vb", "Vipera berus AmtI2", "Vipera berus AmtI1", 
+             "Vipera aspis AmtI1", "Vipera aspis AmtI1", "Vipera aspis (AmtI2)",
+             "Vipera aspis zinnikeri AmtI1"]
 
-dirName=""
+# Variables globales
+dirName = " "
 saveDir = "C:/wamp64/www/Phylogenie/static/data/sauvegardes/"
+
+##################################################################################################
+##################################################################################################
+##################################################################################################
 
 ## Function calls to use the program in the terminal without the user interface
 #dirName = get_fasta(id_list)
