@@ -49,13 +49,13 @@ from app import app as application
 
 Ajoutez un nouvel virtual host (1)
   
-![Zozor](https://zupimages.net/up/20/50/fzu4.png)
+![Zozor](https://zupimages.net/up/21/04/zkjt.png)
 
     * Entrez le nom du fichier (1)
     * Entrez le chemin complet du fichier (2)
     * Lancez la procédure de création (3)
 
-![Zozor](https://zupimages.net/up/20/50/nzdp.png)
+![Zozor](https://zupimages.net/up/21/04/fx5u.png)
 
 
 2. Allez dans le fichier wamp64\bin\apache\apache2.4.46\conf\extra\httpd-vhosts.conf
